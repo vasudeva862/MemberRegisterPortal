@@ -1,0 +1,30 @@
+.container-fluid {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: blueviolet;
+  //background-image: url("../../../assets/Desktop\ Wallpaper.png");
+  // opacity: 0.8;
+  background-size: contain;
+}
+
+.body {
+  min-height: 60%;
+  min-width: 30%;
+  display: inline-block;
+  border: 0.5px solid lightgrey;
+  box-sizing: border-box;
+  // opacity: 0.95;
+}
+
+input.ng-invalid.ng-touched {
+  border: 1px solid red;
+}
+
+.create-account-button,
+.break-line {
+  min-width: 30%;
+}

@@ -1,0 +1,97 @@
+<div class="container-fluid">
+  <div class="body p-5 mb-1 bg-white">
+    <form #myForm="ngForm" (ngSubmit)="handleSubmit(myForm)">
+      <div class="mb-3 text-uppercase form-label">
+        <h5>Member Reg Portal</h5>
+      </div>
+      <div class="mb-3 text-uppercase text-primary form-label">sign In</div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email address *</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          aria-describedby="emailHelp"
+          ngModel
+          required
+        />
+        <div id="emailText" class="form-text" style="display: none">
+          Email Address Is Required
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password *</label>
+        <input
+          [type]="PasswordType"
+          name="password"
+          class="form-control"
+          id="password"
+          ngModel
+          required
+        />
+        <div id="passwordText" class="form-text" style="display: none">
+          Password Is Required
+        </div>
+      </div>
+      <div class="mb-5 form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="showPasswordCheck"
+          (change)="handleShowPassword()"
+        />
+        <label class="form-check-label" for="showPasswordCheck"
+          >Show Password</label
+        >
+      </div>
+      <div class="d-flex flex-column align-items-center">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="w-50 text-center mb-3"
+        >
+          Sign In
+        </button>
+        <button
+          mat-button
+          class="create-account-button bg-white text-primary"
+          (click)="handleLogInRedirect()"
+        >
+          Create your Member Reg portal account
+        </button>
+        <!-- <button
+          type="submit"
+          class="btn btn-link text-decoration-none text-danger"
+        >
+          Forget Password
+        </button> -->
+      </div>
+    </form>
+  </div>
+
+  <!-- Toast -->
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+    <div
+      id="ToastOperation"
+      class="toast"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
+      <div class="toast-header">
+        <strong class="me-auto toast-title"></strong>
+        <!-- <small>11 mins ago</small> -->
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="toast"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="toast-body text-white"></div>
+    </div>
+  </div>
+  <!-- End Toast -->
+</div>

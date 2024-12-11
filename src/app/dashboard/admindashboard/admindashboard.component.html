@@ -1,0 +1,791 @@
+<div class="container-fluid">
+  <div class="header">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-2">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Member Reg Portal</a>
+        <a class="navbar-brand" href="#">Dashboard</a>
+        <li class="nav-item">
+          <a class="btn btn-dark" id="signOut" (click)="handleSignOut()"
+            >SignOut</a
+          >
+        </li>
+      </div>
+    </nav>
+    <nav
+      class="navbar navbar-expand-lg navbar-light"
+      style="background-color: lightgray"
+    >
+      <div class="container-fluid">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul
+            class="navbar-nav me-auto mb-2 mb-lg-0 d-flex justify-content-around"
+          >
+            <li class="nav-item">
+              <a class="nav-link active" id="home-menu" (click)="handleHome()"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link c-p" id="add-menu" (click)="handleAddClaim()"
+                >Add Claim</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link c-p"
+                id="add-menu"
+                (click)="handleUpdateProfile()"
+                >Update Profile</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="body p-3">
+    <!-- Home List -->
+    <table mat-table [dataSource]="List" class="mat-elevation-z8">
+      <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="createdDate">
+        <th mat-header-cell *matHeaderCellDef>Created Date</th>
+        <td mat-cell *matCellDef="let element">{{ element.createdDate }}</td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="claimID">
+        <th mat-header-cell *matHeaderCellDef>Claim ID</th>
+        <td mat-cell *matCellDef="let element">{{ element.claimID }}</td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="dateOfAdmission">
+        <th mat-header-cell *matHeaderCellDef>Admission Date</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.dateOfAdmission }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dateOfDischarge">
+        <th mat-header-cell *matHeaderCellDef>Discharge Date</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.dateOfDischarge }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="setting">
+        <th mat-header-cell *matHeaderCellDef>Setting</th>
+        <td mat-cell *matCellDef="let element">
+          <button
+            mat-raised-button
+            color="primary"
+            class="mx-3"
+            (click)="handleEdit(element)"
+          >
+            Edit Claim
+          </button>
+          <button
+            mat-raised-button
+            color="warn"
+            (click)="handleDelete(element.id)"
+          >
+            Remove Claim
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="width: inherit">
+        <div class="modal-body p-5" style="width: inherit">
+          <h5 class="text-center mb-3 _header">Add Claim</h5>
+          <form (ngSubmit)="handleSubmit(myForm)" #myForm="ngForm">
+            <div class="mb-3 d-flex">
+              <div class="w-50 me-2">
+                <label for="dependentName1" class="form-label"
+                  >First Dependent Name *</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="dependentName1"
+                  name="dependentName1"
+                  ngModel
+                  required
+                />
+                <small
+                  id="dependentName1Text"
+                  class="form-text text-danger"
+                  style="display: none"
+                >
+                  Field is required
+                </small>
+              </div>
+              <div class="w-50">
+                <label for="dob1" class="form-label"
+                  >1st Dep. Date of birth *</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="dob1"
+                  name="dob1"
+                  ngModel
+                  required
+                />
+                <small
+                  id="dob1Text"
+                  class="form-text text-danger"
+                  style="display: none"
+                >
+                  Field is required
+                </small>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="dependent1Claim" class="form-label"
+                >Dependent 1 Claim *</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="dependent1Claim"
+                name="dependent1Claim"
+                required
+                ngModel
+                #claimName="ngModel"
+              />
+              <div
+                id="dependent1ClaimText"
+                class="form-text text-danger"
+                style="display: none"
+              >
+                Field is required
+              </div>
+            </div>
+            <div class="mb-3 d-flex">
+              <div class="w-50 me-2">
+                <label for="dependentName2" class="form-label"
+                  >Second Dependent Name *</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="dependentName2"
+                  name="dependentName2"
+                  ngModel
+                  required
+                />
+                <small
+                  id="dependentName2Text"
+                  class="form-text text-danger"
+                  style="display: none"
+                >
+                  Field is required
+                </small>
+              </div>
+              <div class="w-50">
+                <label for="dob2" class="form-label"
+                  >2nd Dep. Date of birth *</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="dob2"
+                  name="dob2"
+                  ngModel
+                  required
+                />
+                <small
+                  id="dob2Text"
+                  class="form-text text-danger"
+                  style="display: none"
+                >
+                  Field is required
+                </small>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="dependent2Claim" class="form-label"
+                >Dependent 2 Claim *</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="dependent2Claim"
+                name="dependent2Claim"
+                required
+                ngModel
+                #claimName="ngModel"
+              />
+              <div
+                id="dependent2ClaimText"
+                class="form-text text-danger"
+                style="display: none"
+              >
+                Field is required
+              </div>
+            </div>
+            <div class="mb-3 d-flex">
+              <div class="mb-3 w-50 me-2">
+                <label for="dateOfAdmission" class="form-label"
+                  >Date Of Admission *</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="dateOfAdmission"
+                  name="dateOfAdmission"
+                  ngModel
+                  required
+                />
+                <small
+                  id="dateOfAdmissionText"
+                  class="form-text text-danger"
+                  style="display: none"
+                >
+                  Field is required
+                </small>
+              </div>
+              <div class="mb-3 w-50">
+                <label for="dateOfDischarge" class="form-label"
+                  >Date Of Discharge *</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="dateOfDischarge"
+                  name="dateOfDischarge"
+                  ngModel
+                  required
+                />
+                <small
+                  id="dateOfDischargeText"
+                  class="form-text text-danger"
+                  style="display: none"
+                >
+                  Field is required
+                </small>
+              </div>
+            </div>
+            <div class="mb-3 d-flex">
+              <div class="mb-3 w-50 me-2">
+                <label for="providerName" class="form-label"
+                  >Provider Name *</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="providerName"
+                  name="providerName"
+                  ngModel
+                  required
+                />
+                <small
+                  id="providerNameText"
+                  class="form-text text-danger"
+                  style="display: none"
+                >
+                  Field is required
+                </small>
+              </div>
+              <div class="mb-3 w-50">
+                <label for="totalBillAmount" class="form-label"
+                  >Total Bill Amount *</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="totalBillAmount"
+                  name="totalBillAmount"
+                  ngModel
+                  required
+                />
+                <small
+                  id="totalBillAmountText"
+                  class="form-text text-danger"
+                  style="display: none"
+                >
+                  Field is required
+                </small>
+              </div>
+            </div>
+            <button
+              type="submit"
+              class="btn btn-primary my-3 w-25 float-end"
+              id="buttonOperation"
+            >
+              Add
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="exampleEditModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="width: inherit">
+        <div class="modal-body p-5" style="width: inherit">
+          <h5 class="text-center text-primary mb-5">Update Claim</h5>
+
+          <div class="d-flex w-100">
+            <div class="mb-3 me-2 w-50">
+              <label for="dependentName1" class="form-label"
+                >1st Dependence Name *</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="dependentName1"
+                name="dependentName1"
+                value="{{ dependentName1 }}"
+                (keyup)="handleChange($event)"
+              />
+              <small
+                id="dependentName1Text"
+                class="form-text text-danger"
+                *ngIf="dependentName1Flag"
+              >
+                Field is required
+              </small>
+            </div>
+            <div class="mb-3 w-50">
+              <label for="dateOfBirth1" class="form-label"
+                >Date Of Birth *</label
+              >
+              <input
+                type="date"
+                class="form-control"
+                id="dateOfBirth1"
+                name="dateOfBirth1"
+                [readOnly]="IsEdit"
+                value="{{ dateOfBirth1 }}"
+                (change)="handleChange($event)"
+              />
+              <small
+                id="dateOfBirth1Text"
+                class="form-text text-danger"
+                *ngIf="dateOfBirth1Flag"
+              >
+                Field is required
+              </small>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="dependent1Claim" class="form-label"
+              >Dependent 1 Claim *</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="dependent1Claim"
+              name="dependent1Claim"
+              value="{{ dependent1Claim }}"
+              (keyup)="handleChange($event)"
+            />
+            <div
+              id="dependent1ClaimText"
+              class="form-text text-danger"
+              *ngIf="dependent1ClaimFlag"
+            >
+              Field is required
+            </div>
+          </div>
+          <div class="d-flex w-100">
+            <div class="mb-3 me-2 w-50">
+              <label for="dependentName2" class="form-label"
+                >2nd Dependence Name</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="dependentName2"
+                name="dependentName2"
+                value="{{ dependentName2 }}"
+                (keyup)="handleChange($event)"
+              />
+              <div
+                *ngIf="dependentName2Flag"
+                id="dependentName2Text"
+                class="form-text text-danger"
+              >
+                Field is required
+              </div>
+            </div>
+            <div class="mb-3 w-50">
+              <label for="dateOfBirth2" class="form-label"
+                >Date Of Birth *</label
+              >
+              <input
+                type="date"
+                class="form-control"
+                id="dateOfBirth2"
+                name="dateOfBirth2"
+                [readOnly]="IsEdit"
+                value="{{ dateOfBirth2 }}"
+                (change)="handleChange($event)"
+              />
+              <div
+                id="dateOfBirth2Text"
+                class="form-text text-danger"
+                *ngIf="dateOfBirth2Flag"
+              >
+                Field is required
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="dependent2Claim" class="form-label"
+              >Dependent 2 Claim *</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="dependent2Claim"
+              name="dependent2Claim"
+              value="{{ dependent2Claim }}"
+              (keyup)="handleChange($event)"
+            />
+            <div
+              id="dependent2ClaimText"
+              class="form-text text-danger"
+              *ngIf="dependent2ClaimFlag"
+            >
+              Field is required
+            </div>
+          </div>
+          <div class="mb-3 d-flex">
+            <div class="mb-3 w-50 me-2">
+              <label for="dateOfAdmission" class="form-label"
+                >Date Of Admission *</label
+              >
+              <input
+                type="date"
+                class="form-control"
+                id="dateOfAdmission"
+                name="dateOfAdmission"
+                value="{{ dateOfAdmission }}"
+                (change)="handleChange($event)"
+              />
+              <small
+                id="dateOfAdmissionText"
+                class="form-text text-danger"
+                *ngIf="dateOfAdmissionFlag"
+              >
+                Field is required
+              </small>
+            </div>
+            <div class="mb-3 w-50">
+              <label for="dateOfDischarge" class="form-label"
+                >Date Of Discharge *</label
+              >
+              <input
+                type="date"
+                class="form-control"
+                id="dateOfDischarge"
+                name="dateOfDischarge"
+                value="{{ dateOfDischarge }}"
+                (change)="handleChange($event)"
+              />
+              <small
+                id="dateOfDischargeText"
+                class="form-text text-danger"
+                *ngIf="dateOfDischargeFlag"
+              >
+                Field is required
+              </small>
+            </div>
+          </div>
+          <div class="mb-3 d-flex">
+            <div class="mb-3 w-50 me-2">
+              <label for="providerName" class="form-label"
+                >Provider Name *</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="providerName"
+                name="providerName"
+                value="{{ providerName }}"
+                (keyup)="handleChange($event)"
+              />
+              <small
+                id="providerNameText"
+                class="form-text text-danger"
+                *ngIf="providerNameFlag"
+              >
+                Field is required
+              </small>
+            </div>
+            <div class="mb-3 w-50">
+              <label for="totalBillAmount" class="form-label"
+                >Total Bill Amount *</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="totalBillAmount"
+                name="totalBillAmount"
+                value="{{ totalBillAmount }}"
+                (keyup)="handleChange($event)"
+              />
+              <small
+                id="totalBillAmountText"
+                class="form-text text-danger"
+                *ngIf="totalBillAmountFlag"
+              >
+                Field is required
+              </small>
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="btn btn-primary w-25 float-end"
+            id="buttonOperation"
+            (click)="handleEditSubmit()"
+          >
+            Update
+          </button>
+          <!-- </form> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="exampleEditProfileModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="width: 500px">
+        <div class="modal-body p-5" style="width: inherit">
+          <h5 class="text-center text-primary mb-5">Update Profile</h5>
+
+          <div class="mb-3">
+            <label for="user_ID" class="form-label">User ID</label>
+            <input
+              type="text"
+              class="form-control"
+              id="user_ID"
+              name="used_ID"
+              readonly
+              value="{{ UserDetails.id }}"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="user_Name" class="form-label">User Name *</label>
+            <input
+              type="text"
+              class="form-control"
+              id="user_Name"
+              name="user_Name"
+              value="{{ UserDetails.name }}"
+              (change)="handleProfileChange($event)"
+            />
+            <small
+              id="user_NameText"
+              class="form-text text-danger"
+              style="display: none"
+            >
+            </small>
+          </div>
+
+          <div class="mb-3">
+            <label for="email_ID" class="form-label">Email ID *</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email_ID"
+              name="email_ID"
+              value="{{ UserDetails.emailID }}"
+              (keyup)="handleProfileChange($event)"
+            />
+            <small
+              id="email_IDText"
+              class="form-text text-danger"
+              style="display: none"
+            ></small>
+          </div>
+
+          <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <input
+              type="text"
+              class="form-control"
+              id="address"
+              name="address"
+              value="{{ UserDetails.address }}"
+              (keyup)="handleProfileChange($event)"
+            />
+            <small
+              style="display: none"
+              id="addressText"
+              class="form-text text-danger"
+            >
+            </small>
+          </div>
+          <div class="mb-3">
+            <label for="state" class="form-label">State *</label>
+            <input
+              type="text"
+              class="form-control"
+              id="state"
+              name="state"
+              value="{{ UserDetails.state }}"
+              (change)="handleProfileChange($event)"
+            />
+            <small
+              id="stateText"
+              class="form-text text-danger"
+              style="display: none"
+            >
+            </small>
+          </div>
+
+          <div class="mb-3">
+            <label for="country" class="form-label">Country *</label>
+            <input
+              type="text"
+              class="form-control"
+              id="country"
+              name="country"
+              value="{{ UserDetails.country }}"
+              (keyup)="handleProfileChange($event)"
+            />
+            <small
+              id="countryText"
+              class="form-text text-danger"
+              style="display: none"
+            >
+            </small>
+          </div>
+
+          <div class="mb-3">
+            <label for="pan_Number" class="form-label">PAN Number *</label>
+            <input
+              type="text"
+              class="form-control"
+              id="pan_Number"
+              name="pan_Number"
+              value="{{ UserDetails.panNumber }}"
+              (change)="handleProfileChange($event)"
+            />
+            <small
+              id="pan_NumberText"
+              class="form-text text-danger"
+              style="display: none"
+            >
+            </small>
+          </div>
+          <div class="mb-3">
+            <label for="contact_Number" class="form-label"
+              >Contact Number *</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="contact_Number"
+              name="contact_Number"
+              value="{{ UserDetails.contactNumber }}"
+              (change)="handleProfileChange($event)"
+            />
+            <small
+              id="contact_NumberText"
+              class="form-text text-danger"
+              style="display: none"
+            >
+            </small>
+          </div>
+
+          <div class="mb-3">
+            <label for="date_Of_Birth" class="form-label"
+              >Date Of Birth *</label
+            >
+            <input
+              type="date"
+              class="form-control"
+              id="date_Of_Birth"
+              name="date_Of_Birth"
+              value="{{ UserDetails.dateOfBirth }}"
+              (change)="handleProfileChange($event)"
+            />
+            <small
+              id="date_Of_BirthText"
+              class="form-text text-danger"
+              style="display: none"
+            >
+            </small>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary w-25 float-end"
+            id="buttonOperation"
+            (click)="handleProfileEditSubmit()"
+          >
+            Update
+          </button>
+          <!-- </form> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End Model -->
+
+  <!-- Toast -->
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+    <div
+      id="ToastOperation"
+      class="toast"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
+      <div class="toast-header">
+        <strong class="me-auto toast-title"></strong>
+        <!-- <small>11 mins ago</small> -->
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="toast"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="toast-body text-white"></div>
+    </div>
+  </div>
+  <!-- End Toast -->
+</div>
+
+<!-- <script>
+  $(document).ready(function () {
+    $("#home-menu").click(function () {
+      console.log("Hello Vishal");
+    });
+    
+  });
+</script> -->
